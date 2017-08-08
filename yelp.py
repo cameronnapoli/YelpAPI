@@ -42,16 +42,21 @@ class YelpAPIInterface():
         :param params: parameters to be passed into Yelp query
         :returns: JSON response from Yelp
         '''
-        token = self.fetchYelpToken() # fetch token
-        if(token == False):
-            return ""
+        token = self.fetchYelpToken()
+        if not token:
+            return None
 
+        # Yelp Basic Authentication header
         oauth_header = {'Authorization': 'Bearer ' + token}
 
+        # change parameters into URL form and concatentate them with
+        # the search url
         req_url = self.search_url +"?"+ urllib.parse.urlencode(params)
-        print(req_url + "   ") # DEBUG
 
+        # send HTTP request to Yelp API
         api_req = requests.get(req_url, headers=oauth_header)
+
+        # return API response content
         return api_req.text
 
 
@@ -59,9 +64,9 @@ class YelpAPIInterface():
 y = YelpAPIInterface('yelp_api_config.txt')
 
 params = {
-    "term":"sushi",
-    "location":"Irvine,CA",
-    "radius":"5000"
+    "term": "sushi",
+    "location": "Irvine,CA",
+    "radius": "5000"
 }
 
 print(y.getYelpAPIResponse(params))
